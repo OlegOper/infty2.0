@@ -1,0 +1,63 @@
+version: '2'
+
+volumes:
+  postgres_data: {}
+  postgres_backup: {}
+  redis_data: {}
+
+services:
+  postgres:
+    image: postgres:9.6-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - postgres_backup:/backups
+    env_file:
+      - env.dev
+
+  django:
+    build:
+      context: .
+      dockerfile: ./compose/dev/Dockerfile
+    depends_on:
+      - postgres
+      - redis
+      - celeryworker
+      - celerybeat
+    command: /start.sh
+    volumes:
+      - .:/app:rw
+    env_file:
+      - env.dev
+    ports:
+      - "8000:8000"
+
+  redis:
+    image: redis:4-alpine
+    volumes:
+      - redis_data:/data
+
+  celeryworker:
+    build:
+      context: .
+      dockerfile: ./compose/dev/Dockerfile
+    volumes:
+      - .:/app
+    depends_on:
+     - postgres
+     - redis
+    command: celery -A infty.celery worker -l INFO --purge
+    env_file:
+      - env.dev
+
+  celerybeat:
+    build:
+      context: .
+      dockerfile: ./compose/dev/Dockerfile
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+      - redis
+    command: celery -A infty.celery beat -l INFO
+    env_file:
+      - env.dev
