@@ -11,6 +11,50 @@ Infty Project
 :License: GPLv3
 
 
+Local development without docker
+--------------------------------
+# Local development on Linux Ubuntu 16.04.
+
+## Install PostgreSQL, and create infty db.
+```
+sudo add-apt-repository "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main"
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install postgresql-9.6
+
+su postgres
+
+psql
+
+create role <your_linux_user> CREATEDB LOGIN;
+
+vim /etc/postgresql/9.6/main/pg_hba.conf
+
+local: trust
+host: trust
+host: trust
+
+service postgresql restart
+
+su <your_linux_user>
+
+createdb <your_linux_user>
+
+createdb infty
+```
+## Install dependencies and migrate db.
+```
+pip install -r requirements/local.txt
+
+python manage.py migrate
+```
+
+## Check if all works.
+```
+py.test
+```
+
+
 Local (Development) installation
 --------------------------------
 WIP
