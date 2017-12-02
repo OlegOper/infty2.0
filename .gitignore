@@ -79,3 +79,8 @@ deploy/ansible/roles/infty/files/*
 !.env_production.vault
 
 config/settings/dev.py
+
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
