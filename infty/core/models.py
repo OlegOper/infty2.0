@@ -134,7 +134,7 @@ class Instance(GenericTranslationModel):
     ]
 
     role = models.PositiveSmallIntegerField(ITEM_ROLES, default=THING)
-    concept = models.ForeignKey(Type)
+    concept = models.ForeignKey(Type, on_delete=models.CASCADE)
 
     identifiers = models.TextField()
     description = models.TextField()
@@ -189,7 +189,7 @@ class Topic(TopicTransactionMixin, GenericTranslationModel):
     title = models.TextField()
     body = models.TextField(null=True, blank=True)
 
-    owner = models.ForeignKey(User)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     editors = models.ManyToManyField(
         User,
         related_name='topic_editors',
@@ -233,16 +233,16 @@ class Comment(CommentTransactionMixin, GenericTranslationModel):
 
     Note: order of languages is preserved, in the order of input.
     """
-    topic = models.ForeignKey(Topic)
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     text = models.TextField()
 
     claimed_hours = models.DecimalField(default=0., decimal_places=8, max_digits=20)
     assumed_hours = models.DecimalField(default=0., decimal_places=8, max_digits=20)
 
-    owner = models.ForeignKey(User)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     blockchain = models.PositiveSmallIntegerField(CryptoKeypair.KEY_TYPES, default=False)
 
-    parent = models.ForeignKey('self', null=True, blank=True)
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
 
     def set_hours(self):
 

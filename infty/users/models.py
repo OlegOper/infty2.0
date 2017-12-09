@@ -3,7 +3,7 @@ import hashlib
 from bigchaindb_driver.crypto import generate_keypair
 
 from django.contrib.auth.models import AbstractUser
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.crypto import get_random_string
@@ -72,7 +72,7 @@ class CryptoKeypair(GenericModel):
         (IPDB, 'IPDB'),
     ]
 
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     type = models.PositiveSmallIntegerField(KEY_TYPES, default=IPDB)
     private_key = models.TextField(null=True, blank=True)
     public_key = models.TextField(null=False, blank=False)
@@ -84,7 +84,7 @@ class CryptoKeypair(GenericModel):
 
 
 class OneTimePassword(GenericModel):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     one_time_password = models.CharField(max_length=64, default=get_random_string)
     is_used = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True) #put inactive if maximum nmb of attempts was reached or when is_used=True

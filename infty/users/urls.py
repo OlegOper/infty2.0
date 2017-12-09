@@ -1,26 +1,27 @@
-from django.conf.urls import url
+from django.urls import path
 
-from . import views
+from infty.users import views
 
+app_name = 'users'
 urlpatterns = [
-    url(
-        regex=r'^$',
+    path(
+        '',
         view=views.UserListView.as_view(),
         name='list'
     ),
-    url(
-        regex=r'^~redirect/$',
+    path(
+        '~redirect/',
         view=views.UserRedirectView.as_view(),
         name='redirect'
     ),
-    url(
-        regex=r'^(?P<username>[\w.@+-]+)/$',
-        view=views.UserDetailView.as_view(),
-        name='detail'
-    ),
-    url(
-        regex=r'^~update/$',
+    path(
+        '~update/',
         view=views.UserUpdateView.as_view(),
         name='update'
+    ),
+    path(
+        '<username>/',
+        view=views.UserDetailView.as_view(),
+        name='detail'
     ),
 ]

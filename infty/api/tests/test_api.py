@@ -4,7 +4,7 @@ import json
 from rest_framework.test import APITestCase
 from rest_framework import status
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from infty.core.models import Topic, Comment
 from infty.transactions.models import (
